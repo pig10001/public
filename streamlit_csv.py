@@ -1,7 +1,7 @@
 import io
 import pandas as pd
 import streamlit as st
-import plotly.graph_objs as go
+import plotly
 from generate_Result import Analysis
 
 
@@ -18,7 +18,7 @@ def gen_markers(analysis, point, colors):
     for i in analysis.Sp_Value_dict.keys():
         if analysis.Sp_Value_dict[i].get(point):
             markers_y_list.append(analysis.Sp_Value_dict[i][point])
-    return go.Scatter(x=markers_x_list, y=markers_y_list, marker={'color': colors, 'size': 7}, mode="markers",
+    return plotly.graph_objs.Scatter(x=markers_x_list, y=markers_y_list, marker={'color': colors, 'size': 7}, mode="markers",
                       name=point, )
 
 # 上傳檔案
@@ -93,7 +93,7 @@ if uploaded_file:
             # 顯示分析結果
             st.dataframe(data=analysis.Sp_Cal_dict, use_container_width=True)
             # 產生全部數據線圖，x軸是影格的list，y軸是數值
-            data1 = go.Scatter(x=[i for i in range(0, len(Data_Arr))], y=Data_Arr, mode="lines", name='總數據')
+            data1 = plotly.graph_objs.Scatter(x=[i for i in range(0, len(Data_Arr))], y=Data_Arr, mode="lines", name='總數據')
             # 產生點位
             data2 = gen_markers(analysis, 'Prepare-for-next-stand', 'green')
             data3 = gen_markers(analysis, 'Sit-to-stand', 'grey')
@@ -101,8 +101,8 @@ if uploaded_file:
             data5 = gen_markers(analysis, 'Stand-to-sit', 'red')
             # 將各點整合到圖上
             data = [data1, data2, data3, data4, data5]
-            layout = go.Layout(title=uploaded_file.name)
-            fig = go.Figure(data=data, layout=layout)
+            layout = plotly.graph_objs.Layout(title=uploaded_file.name)
+            fig = plotly.graph_objs.Figure(data=data, layout=layout)
             # 設定圖片的大小
             fig.update_layout(autosize=False, width=800, height=600, )
             # 顯示到streamlit上
